@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.example.rocketmqutil.config.RocketMqConfiguration,com.example.rocketmqutil.utils.SendMessageUtil,com.example.rocketmqutil.properties.ProducerProperties,com.example.rocketmqutil.properties.ConsumerProperties
