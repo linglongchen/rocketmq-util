@@ -35,6 +35,6 @@ public @interface RocketMqConsumerListener {
      * 重试次数
      * @return 次数
      */
-    int reConsumeTimes() default 26;
+    int reConsumeTimes() default -1;
 
 }
