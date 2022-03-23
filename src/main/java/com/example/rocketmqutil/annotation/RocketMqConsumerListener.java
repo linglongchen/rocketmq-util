@@ -1,5 +1,7 @@
 package com.example.rocketmqutil.annotation;
 
+import com.example.rocketmqutil.constants.MessageModelConstant;
+import com.example.rocketmqutil.constants.MessageTypeConstant;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -25,6 +27,8 @@ public @interface RocketMqConsumerListener {
 
     int threadNum() default 5;
 
-    String messageModel() default "CLUSTERING";
+    String messageModel() default MessageModelConstant.CLUSTERING;
+
+    String messageType() default MessageTypeConstant.CONCURRENTLY;
 
 }

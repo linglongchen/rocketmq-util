@@ -1,10 +1,14 @@
 package com.example.rocketmqutil.processor;
 
 import com.example.rocketmqutil.annotation.RocketMqConsumerListener;
+import com.example.rocketmqutil.constants.MessageTypeConstant;
+import com.example.rocketmqutil.consumer.AbstractOrderlyRocketMqConsumer;
 import com.example.rocketmqutil.properties.ConsumerProperties;
-import com.example.rocketmqutil.consumer.AbstractRocketMqConsumer;
+import com.example.rocketmqutil.consumer.AbstractConcurrentlyRocketMqConsumer;
 import javax.annotation.Resource;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
+import org.apache.rocketmq.client.consumer.listener.MessageListener;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
@@ -12,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.stereotype.Component;
 
 /**
  *
@@ -34,27 +37,33 @@ public class RocketMqConsumerProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if (bean instanceof AbstractRocketMqConsumer) {
-            RocketMqConsumerListener listener = bean.getClass().getAnnotation(RocketMqConsumerListener.class);
-            if (listener == null) {
+        if (bean instanceof MessageListener) {
+            RocketMqConsumerListener annotation = bean.getClass().getAnnotation(RocketMqConsumerListener.class);
+            if (annotation == null) {
                 BeanPostProcessor.super.postProcessAfterInitialization(bean, beanName);
             } else {
-                AbstractRocketMqConsumer abstractRocketMqConsumer = (AbstractRocketMqConsumer) bean;
+                String messageType = annotation.messageType();
                 DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(consumerProperties.getGroupName());
-                String topic = listener.topic();
-                String tag = listener.tag();
-                consumer.setNamesrvAddr(consumerProperties.getNamesrvAddr());
-                consumer.setConsumeThreadMin(listener.threadNum());
-                consumer.setConsumeThreadMax(consumerProperties.getConsumeThreadMax());
-                consumer.setConsumeMessageBatchMaxSize(consumerProperties.getConsumeMessageBatchMaxSize());
-                // 设置监听
-                consumer.registerMessageListener(abstractRocketMqConsumer);
+                String topic = annotation.topic();
+                String tag = annotation.tag();
                 /**
                  * 设置consumer第一次启动是从队列头部开始还是队列尾部开始
                  * 如果不是第一次启动，那么按照上次消费的位置继续消费
                  */
                 consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
-                consumer.setMessageModel(MessageModel.CLUSTERING);
+                consumer.setMessageModel(MessageModel.valueOf(annotation.messageModel()));
+                consumer.setNamesrvAddr(consumerProperties.getNamesrvAddr());
+                consumer.setConsumeThreadMin(annotation.threadNum());
+                consumer.setConsumeThreadMax(consumerProperties.getConsumeThreadMax());
+                consumer.setConsumeMessageBatchMaxSize(consumerProperties.getConsumeMessageBatchMaxSize());
+                if (StringUtils.equals(messageType, MessageTypeConstant.CONCURRENTLY)) {
+                    AbstractConcurrentlyRocketMqConsumer abstractRocketMqConsumer = (AbstractConcurrentlyRocketMqConsumer) bean;
+                    // 设置监听
+                    consumer.registerMessageListener(abstractRocketMqConsumer);
+                } else if (StringUtils.equals(messageType, MessageTypeConstant.ORDERLY)) {
+                    AbstractOrderlyRocketMqConsumer abstractOrderlyRocketMqConsumer = (AbstractOrderlyRocketMqConsumer) bean;
+                    consumer.registerMessageListener(abstractOrderlyRocketMqConsumer);
+                }
                 try {
                     consumer.subscribe(topic,tag);
                 } catch (MQClientException e) {

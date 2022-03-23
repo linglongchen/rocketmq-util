@@ -23,9 +23,9 @@ import org.springframework.context.annotation.Configuration;
  * @version 1.0
  * @date 2022/3/21 16:05
  */
-public class AbstractRocketMqConsumer<T> implements MessageListenerConcurrently {
+public class AbstractConcurrentlyRocketMqConsumer<T> implements MessageListenerConcurrently {
 
-    private static final Logger log = LoggerFactory.getLogger(AbstractRocketMqConsumer.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractConcurrentlyRocketMqConsumer.class);
 
 
     protected void consume(T object) {
