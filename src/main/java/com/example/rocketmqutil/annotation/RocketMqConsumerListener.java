@@ -31,4 +31,10 @@ public @interface RocketMqConsumerListener {
 
     String messageType() default MessageTypeConstant.CONCURRENTLY;
 
+    /**
+     * 重试次数
+     * @return 次数
+     */
+    int reConsumeTimes() default 26;
+
 }

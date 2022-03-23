@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ConsumerServiceConcurrently  {
 
     @RocketMqConsumerListener(topic = "mq_topic_test",tag = "tag1")
-    static class ConcurrentlyConsumer extends AbstractConcurrentlyRocketMqConsumer<String> {
+    static class ConcurrentlyRocketMqConsumer extends AbstractConcurrentlyRocketMqConsumer<String> {
         @Override
         protected void consume(String object) {
             log.info("================消息消费：{}===========",object);
@@ -24,7 +24,7 @@ public class ConsumerServiceConcurrently  {
     }
 
     @RocketMqConsumerListener(topic = "mq_topic_test",tag = "tag2")
-    static class OrderlyConsumer extends AbstractConcurrentlyRocketMqConsumer<String> {
+    static class OrderlyRocketMqConsumer extends AbstractConcurrentlyRocketMqConsumer<String> {
         @Override protected void consume(String object) {
             log.info("================消息消费：{}===========",object);
             if (object.equals("111")) {
