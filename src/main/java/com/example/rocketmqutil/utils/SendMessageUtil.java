@@ -1,5 +1,6 @@
 package com.example.rocketmqutil.utils;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
@@ -9,6 +10,8 @@ import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author chenlingl
@@ -26,9 +29,21 @@ public class SendMessageUtil {
         this.defaultMQProducer = producer;
     }
 
-    public void sendMessage(String msg) throws MQBrokerException, RemotingException, InterruptedException, MQClientException {
-        Message sendMsg = new Message("mq_topic_test", "tag1", msg.getBytes());
+    /**
+     * sync send normal message
+     * @param topic
+     * @param tag
+     * @param o
+     * @return
+     * @throws MQBrokerException
+     * @throws RemotingException
+     * @throws InterruptedException
+     * @throws MQClientException
+     */
+    public SendResult sendSyncMessage(String topic,String tag,Object o) throws MQBrokerException, RemotingException, InterruptedException, MQClientException {
+        Message sendMsg = new Message(topic, tag, JSON.toJSONBytes(o));
         SendResult sendResult = defaultMQProducer.send(sendMsg);
-        log.info("==========发送消息结果：{}================",sendResult.toString());
+        log.info("==========send message result：{}================",sendResult.toString());
+        return sendResult;
     }
 }

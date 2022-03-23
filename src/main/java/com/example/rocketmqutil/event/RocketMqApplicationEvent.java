@@ -1,5 +1,6 @@
 package com.example.rocketmqutil.event;
 
+import io.netty.util.internal.ThrowableUtil;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.slf4j.Logger;
@@ -27,9 +28,9 @@ public class RocketMqApplicationEvent implements ApplicationListener<ContextRefr
             try {
                 consumer.start();
             } catch (MQClientException e) {
-                log.error("================消费者启动失败=================");
+                log.error("================consumer start failed,failed reason：【{}】=================", ThrowableUtil.stackTraceToString(e));
             }
-            log.info("==========================消费者启动，订阅关系：[{}]====================",consumer.getSubscription());
+            log.info("==========================consumer start success，consumer group：[{}]====================",consumer.getConsumerGroup());
         });
     }
 }

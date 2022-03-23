@@ -39,7 +39,7 @@ public class AbstractConcurrentlyRocketMqConsumer<T> extends AbstractRocketMqCon
             String messageId = messageExt.getMsgId();
             String msgBody = new String(messageExt.getBody(), StandardCharsets.UTF_8);
             int reConsumeTimes = messageExt.getReconsumeTimes();
-            log.info("消息Topic：[{}],消息Tag：[{}],消息消费次数：[{}]，消息实体：[{}]，重推前消息ID:{},重推后消息ID:{}", messageExt.getTopic(), messageExt.getTags(),reConsumeTimes, msgBody,messageId, messageId);
+            log.info("msg Topic：[{}],msg Tag：[{}],reConsumeTimes：[{}]，msg body：[{}]，reSend before msgID:{},reSend after msgId :{}", messageExt.getTopic(), messageExt.getTags(),reConsumeTimes, msgBody,messageId, messageId);
             Type type = TypeUtil.getTypeArgument(this.getClass());
             Class<?> clazz = TypeUtil.getClass(type);
             Object o = JSON.parseObject(msgBody, clazz);
@@ -48,6 +48,7 @@ public class AbstractConcurrentlyRocketMqConsumer<T> extends AbstractRocketMqCon
             }catch (Exception e) {
                 //大于最大重试次数，直接终止
                 if (reConsumeTimes >= this.getReConsumeTimes(this.getClass())) {
+                    log.info("reConsumeTimes is max，this times is [{}],msg Topic:[{}],msg tag:[{}]",reConsumeTimes,messageExt.getTopic(),messageExt.getTags());
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;

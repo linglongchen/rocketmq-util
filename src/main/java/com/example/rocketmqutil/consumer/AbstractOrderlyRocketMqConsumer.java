@@ -40,15 +40,15 @@ public class AbstractOrderlyRocketMqConsumer<T> extends AbstractRocketMqConsumer
             String msgBody = new String(msg.getBody(), StandardCharsets.UTF_8);
             String topic = msg.getTopic();
             String tag = msg.getTags();
-            int reconsumeTimes = msg.getReconsumeTimes();
-            log.info("消息Topic：[{}],消息Tag：[{}],消息消费次数：[{}]，消息实体：[{}]，重推前消息ID:{},重推后消息ID:{}", topic, tag,reconsumeTimes, msgBody,msgId, msgId);
+            int reConsumeTimes = msg.getReconsumeTimes();
+            log.info("msg Topic：[{}],msg Tag：[{}],reConsumeTimes：[{}]，msg body：[{}]，reSend before msgID:{},reSend after msgId :{}", topic, tag,reConsumeTimes, msgBody,msgId, msgId);
             Type type = TypeUtil.getTypeArgument(this.getClass());
             Class<?> clazz = TypeUtil.getClass(type);
             Object o = JSON.parseObject(msgBody, clazz);
             try {
                 this.consume((T)o,msg);
             }catch (Exception e) {
-                if (reconsumeTimes >= this.getReConsumeTimes(this.getClass())) {
+                if (reConsumeTimes >= this.getReConsumeTimes(this.getClass())) {
                     return ConsumeOrderlyStatus.SUCCESS;
                 }
                 return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;

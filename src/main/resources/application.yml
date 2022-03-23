@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: rocketmq-test
+    name: rocketmq-TEST
 
 rocketmq:
   producer:

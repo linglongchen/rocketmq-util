@@ -6,6 +6,8 @@ import com.example.rocketmqutil.consumer.AbstractOrderlyRocketMqConsumer;
 import com.example.rocketmqutil.properties.ConsumerProperties;
 import com.example.rocketmqutil.consumer.AbstractConcurrentlyRocketMqConsumer;
 import javax.annotation.Resource;
+
+import io.netty.util.internal.ThrowableUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.MessageListener;
@@ -67,9 +69,9 @@ public class RocketMqConsumerProcessor implements BeanPostProcessor {
                 try {
                     consumer.subscribe(topic,tag);
                 } catch (MQClientException e) {
-                    log.error("===================consumer订阅失败!=====================");
+                    log.error("===================consumer subscribe failed! failed reason: [{}]=====================", ThrowableUtil.stackTraceToString(e));
                 }
-                log.info("=================consumer 订阅成功 groupName={}, topics={}, tag={}=====================", consumerProperties.getGroupName(), topic, tag);
+                log.info("=================consumer subscribe success  groupName={}, topics={}, tag={}=====================", consumerProperties.getGroupName(), topic, tag);
                 return consumer;
             }
         }
