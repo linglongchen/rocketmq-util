@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * 顺序消费者处理类
  * @author  chenlingl
  * @date  2022/3/23 9:35
  * @version 1.0

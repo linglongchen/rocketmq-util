@@ -1,6 +1,7 @@
 package com.example.rocketmqutil.processor;
 
 import com.example.rocketmqutil.annotation.RocketMqConsumerListener;
+import com.example.rocketmqutil.constants.ConsumeMethodConstant;
 import com.example.rocketmqutil.constants.MessageTypeConstant;
 import com.example.rocketmqutil.consumer.AbstractOrderlyRocketMqConsumer;
 import com.example.rocketmqutil.properties.ConsumerProperties;
@@ -9,6 +10,8 @@ import javax.annotation.Resource;
 
 import io.netty.util.internal.ThrowableUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.rocketmq.client.consumer.DefaultLitePullConsumer;
+import org.apache.rocketmq.client.consumer.DefaultMQPullConsumer;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.MessageListener;
 import org.apache.rocketmq.client.exception.MQClientException;

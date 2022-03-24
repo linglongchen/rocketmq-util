@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
+ * start
  * @author chenlingl
  */
 public class RocketMqApplicationEvent implements ApplicationListener<ContextRefreshedEvent> {

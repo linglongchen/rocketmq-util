@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * 同步消费者处理类：主要处理普通消息，消费者默认以该方式处理
  * @author chenlingl
  * @version 1.0
  * @date 2022/3/21 16:05

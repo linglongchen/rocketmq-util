@@ -17,12 +17,19 @@ public class ConsumerProperties {
 
     private String groupName;
     private String namesrvAddr;
-    // 消费者线程数据量
+    /**
+     * consumeThreadMin
+     */
     private Integer consumeThreadMin;
     private Integer consumeThreadMax;
     private Integer consumeMessageBatchMaxSize;
     /**
-     * 重试次数
+     * reConsumeTimes
      */
     private Integer reConsumeTimes = 26;
+
+    /**
+     * consumeMethod: push or pull
+     */
+    private String consumeMethod = "push";
 }

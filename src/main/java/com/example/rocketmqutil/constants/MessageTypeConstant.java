@@ -1,18 +1,18 @@
 package com.example.rocketmqutil.constants;
 
 /**
- * 消息类型
+ * messageType
  * @author chenlingl
  * @version 1.0
  * @date 2022/3/23 9:28
  */
 public class MessageTypeConstant {
     /**
-     * 顺序消费
+     * orderly consume
      */
     public static final String ORDERLY = "Orderly";
     /**
-     * 同步消费
+     * concurrently consume
      */
     public static final String CONCURRENTLY = "Concurrently";
 

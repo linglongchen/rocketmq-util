@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.Resource;
 
 /**
+ * RocketMqUtil's configuration
  * @author chenlingl
  */
 @Configuration
@@ -26,7 +27,7 @@ public class RocketMqConfiguration {
     private static final Logger log = LoggerFactory.getLogger(RocketMqConfiguration.class);
 
     /**
-     * mq 生成者配置
+     * init DefaultMQProducer and inject this defaultMQProducer to beanFactory
      * @return
      * @throws MQClientException
      */
