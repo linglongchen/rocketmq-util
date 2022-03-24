@@ -1,7 +1,6 @@
 package com.example.rocketmqutil.processor;
 
 import com.example.rocketmqutil.annotation.RocketMqConsumerListener;
-import com.example.rocketmqutil.constants.ConsumeMethodConstant;
 import com.example.rocketmqutil.constants.MessageTypeConstant;
 import com.example.rocketmqutil.consumer.AbstractOrderlyRocketMqConsumer;
 import com.example.rocketmqutil.properties.ConsumerProperties;
@@ -10,8 +9,6 @@ import javax.annotation.Resource;
 
 import io.netty.util.internal.ThrowableUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.rocketmq.client.consumer.DefaultLitePullConsumer;
-import org.apache.rocketmq.client.consumer.DefaultMQPullConsumer;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.MessageListener;
 import org.apache.rocketmq.client.exception.MQClientException;
@@ -48,13 +45,9 @@ public class RocketMqConsumerProcessor implements BeanPostProcessor {
                 BeanPostProcessor.super.postProcessAfterInitialization(bean, beanName);
             } else {
                 String messageType = annotation.messageType();
-                DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(consumerProperties.getGroupName());
                 String topic = annotation.topic();
                 String tag = annotation.tag();
-                /**
-                 * 设置consumer第一次启动是从队列头部开始还是队列尾部开始
-                 * 如果不是第一次启动，那么按照上次消费的位置继续消费
-                 */
+                DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(consumerProperties.getGroupName());
                 consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
                 consumer.setMessageModel(MessageModel.valueOf(annotation.messageModel()));
                 consumer.setNamesrvAddr(consumerProperties.getNamesrvAddr());
