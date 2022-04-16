@@ -8,8 +8,11 @@
 
 ### 如何使用
 
+
+
 yml中实现配置文件：
-`rocketmq:
+```yaml
+rocketmq:
   producer:
     groupName: ${spring.application.name}
     namesrvAddr: 127.0.0.1:9876
@@ -22,7 +25,10 @@ yml中实现配置文件：
     consumeThreadMin: 4
     consumeThreadMax: 32
     consumeMessageBatchMaxSize: 1
-    reConsumeTimes: 3`
+    reConsumeTimes: 3
+```
+
+
 
 ![]( "")
 
