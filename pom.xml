@@ -8,11 +8,11 @@
         <version>2.4.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.example</groupId>
-    <artifactId>rocketmq-test</artifactId>
+    <groupId>com.modules.rocketmq</groupId>
+    <artifactId>rocketmq-util-starter</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>rocketmq-test</name>
-    <description>rocketmq-test</description>
+    <name>rocketmq-util-starter</name>
+    <description>rocketmq-util-starter</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
