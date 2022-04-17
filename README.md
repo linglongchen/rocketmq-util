@@ -20,7 +20,7 @@ rocketmq:
     namesrvAddr: ${rocketmq-config.namesrvAddr}
     maxMessageSize: 4096
     sendMsgTimeOut: 3000
-    retryTimesWhenSendFailed: 2
+    retryTimes: 2
   consumer:
     groupName: ${spring.application.name}
     namesrvAddr: ${rocketmq-config.namesrvAddr}
