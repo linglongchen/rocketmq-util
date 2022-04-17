@@ -21,14 +21,34 @@ import org.springframework.stereotype.Component;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface RocketMqConsumerListener {
+    /**
+     * 消息主题
+     * @return
+     */
     String topic();
 
+    /**
+     * 消息标签
+     * @return
+     */
     String tag();
 
+    /**
+     * 消费者消费线程数：默认5
+     * @return
+     */
     int threadNum() default 5;
 
+    /**
+     * 消息模型：集群和广播，默认集群
+     * @return
+     */
     String messageModel() default MessageModelConstant.CLUSTERING;
 
+    /**
+     * 消息类型：同步和顺序，默认同步
+     * @return
+     */
     String messageType() default MessageTypeConstant.CONCURRENTLY;
 
     /**

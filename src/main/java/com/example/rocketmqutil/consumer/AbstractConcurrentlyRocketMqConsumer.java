@@ -47,6 +47,7 @@ public class AbstractConcurrentlyRocketMqConsumer<T> extends AbstractRocketMqCon
             try {
                 this.consume((T)msgObj,messageExt);
             }catch (Exception e) {
+                log.error("consume message failed！message topic：{}，tag：{}，message body：{}",messageExt.getTopic(),messageExt.getTags(),msgBody);
                 //大于最大重试次数，直接终止
                 if (reConsumeTimes >= this.getReConsumeTimes(this.getClass())) {
                     log.info("reConsumeTimes is max，this times is [{}],msg Topic:[{}],msg tag:[{}]",reConsumeTimes,messageExt.getTopic(),messageExt.getTags());

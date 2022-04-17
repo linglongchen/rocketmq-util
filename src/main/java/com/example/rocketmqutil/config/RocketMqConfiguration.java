@@ -38,7 +38,7 @@ public class RocketMqConfiguration {
         producer.setVipChannelEnabled(false);
         producer.setMaxMessageSize(producerProperties.getMaxMessageSize());
         producer.setSendMsgTimeout(producerProperties.getSendMsgTimeOut());
-        producer.setRetryTimesWhenSendAsyncFailed(producerProperties.getRetryTimesWhenSendFailed());
+        producer.setRetryTimesWhenSendAsyncFailed(producerProperties.getRetryTimes());
         producer.start();
         log.info("===============rocketmq producer server start success!===============");
         return producer;
