@@ -33,6 +33,6 @@ public class ProducerProperties {
     /**
      * 失败重试次数
      */
-    private Integer retryTimesWhenSendFailed;
+    private Integer retryTimes;
 
 }

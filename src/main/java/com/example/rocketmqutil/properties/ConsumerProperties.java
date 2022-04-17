@@ -22,7 +22,7 @@ public class ConsumerProperties {
      */
     private Integer consumeThreadMin;
     private Integer consumeThreadMax;
-    private Integer consumeMessageBatchMaxSize;
+    private Integer consumeMessageBatchMaxSize = 1;
     /**
      * reConsumeTimes
      */
