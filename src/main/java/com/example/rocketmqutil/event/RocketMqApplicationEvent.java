@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
- * start
+ * 启动消费者服务
  * @author chenlingl
  */
 public class RocketMqApplicationEvent implements ApplicationListener<ContextRefreshedEvent> {
@@ -29,9 +29,9 @@ public class RocketMqApplicationEvent implements ApplicationListener<ContextRefr
             try {
                 consumer.start();
             } catch (MQClientException e) {
-                log.error("================consumer start failed,failed reason：【{}】=================", ThrowableUtil.stackTraceToString(e));
+                log.error("==========================consumer start failed,failed reason：[{}]==========================", ThrowableUtil.stackTraceToString(e));
             }
-            log.info("==========================consumer start success，consumer group：[{}]====================",consumer.getConsumerGroup());
+            log.info("==========================consumer start success，consumer group：[{}]==========================",consumer.getConsumerGroup());
         });
     }
 }

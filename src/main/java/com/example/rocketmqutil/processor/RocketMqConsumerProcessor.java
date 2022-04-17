@@ -20,7 +20,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
 /**
- *
+ * 消费者处理器
  * @author chenlingl
  * @version 1.0
  * @date 2022/3/21 16:01

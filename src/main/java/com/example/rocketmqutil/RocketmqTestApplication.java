@@ -3,6 +3,10 @@ package com.example.rocketmqutil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ *
+ * @author chenlingl
+ */
 @SpringBootApplication
 public class RocketmqTestApplication {
 

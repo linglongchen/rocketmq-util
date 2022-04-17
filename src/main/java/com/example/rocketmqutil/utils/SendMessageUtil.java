@@ -47,7 +47,7 @@ public class SendMessageUtil {
     public void sendSyncMessage(String topic,String tag,Object msgBody) throws MQBrokerException, RemotingException, InterruptedException, MQClientException {
         Message sendMsg = new Message(topic, tag, JSON.toJSONBytes(msgBody));
         SendResult sendResult = defaultMQProducer.send(sendMsg);
-        log.info("==========send message success,topic:{},tag:{},result：{}================",topic,tag,JSON.toJSONString(sendMsg));
+        log.info("send message success,topic:{},tag:{},result：{}",topic,tag,JSON.toJSONString(sendMsg));
     }
 
     /**
@@ -64,11 +64,11 @@ public class SendMessageUtil {
         defaultMQProducer.send(sendMsg, new SendCallback() {
             @Override
             public void onSuccess(SendResult sendResult) {
-                log.info("==========send message success,topic:{},tag:{},result：{}================",topic,tag,JSON.toJSONString(sendResult));
+                log.info("send message success,topic:{},tag:{},result：{}",topic,tag,JSON.toJSONString(sendResult));
             }
             @Override
             public void onException(Throwable e) {
-                log.info("==========send message success,topic:{},tag:{},result：{}================",topic,tag, ThrowableUtil.stackTraceToString(e));
+                log.info("send message success,topic:{},tag:{},result：{}",topic,tag, ThrowableUtil.stackTraceToString(e));
             }
         });
     }
@@ -88,6 +88,6 @@ public class SendMessageUtil {
         Message sendMsg = new Message(topic, tag, JSON.toJSONBytes(msgBody));
         long curTime = System.currentTimeMillis() + delayTime;
         SendResult sendResult = defaultMQProducer.send(sendMsg);
-        log.info("==========send message success,topic:{},tag:{},result：{}================",topic,tag,JSON.toJSONString(sendResult));
+        log.info("send message success,topic:{},tag:{},result：{}",topic,tag,JSON.toJSONString(sendResult));
     }
 }

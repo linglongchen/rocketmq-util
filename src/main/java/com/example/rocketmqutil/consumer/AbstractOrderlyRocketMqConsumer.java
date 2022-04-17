@@ -45,9 +45,9 @@ public class AbstractOrderlyRocketMqConsumer<T> extends AbstractRocketMqConsumer
             log.info("msg Topic：[{}],msg Tag：[{}],reConsumeTimes：[{}]，msg body：[{}]，reSend before msgID:{},reSend after msgId :{}", topic, tag,reConsumeTimes, msgBody,msgId, msgId);
             Type type = TypeUtil.getTypeArgument(this.getClass());
             Class<?> clazz = TypeUtil.getClass(type);
-            Object o = JSON.parseObject(msgBody, clazz);
+            Object msgObj = JSON.parseObject(msgBody, clazz);
             try {
-                this.consume((T)o,msg);
+                this.consume((T)msgObj,msg);
             }catch (Exception e) {
                 if (reConsumeTimes >= this.getReConsumeTimes(this.getClass())) {
                     return ConsumeOrderlyStatus.SUCCESS;

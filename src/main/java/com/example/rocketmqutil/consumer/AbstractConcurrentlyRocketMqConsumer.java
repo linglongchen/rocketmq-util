@@ -43,9 +43,9 @@ public class AbstractConcurrentlyRocketMqConsumer<T> extends AbstractRocketMqCon
             log.info("msg Topic：[{}],msg Tag：[{}],reConsumeTimes：[{}]，msg body：[{}]，reSend before msgID:{},reSend after msgId :{}", messageExt.getTopic(), messageExt.getTags(),reConsumeTimes, msgBody,messageId, messageId);
             Type type = TypeUtil.getTypeArgument(this.getClass());
             Class<?> clazz = TypeUtil.getClass(type);
-            Object o = JSON.parseObject(msgBody, clazz);
+            Object msgObj = JSON.parseObject(msgBody, clazz);
             try {
-                this.consume((T) o,messageExt);
+                this.consume((T)msgObj,messageExt);
             }catch (Exception e) {
                 //大于最大重试次数，直接终止
                 if (reConsumeTimes >= this.getReConsumeTimes(this.getClass())) {
