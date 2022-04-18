@@ -38,16 +38,15 @@ public class SendMessageUtil {
      * @param topic 消息主题
      * @param tag 消息标签
      * @param msgBody 消息体
-     * @return
-     * @throws MQBrokerException
-     * @throws RemotingException
-     * @throws InterruptedException
-     * @throws MQClientException
      */
-    public void sendSyncMessage(String topic,String tag,Object msgBody) throws MQBrokerException, RemotingException, InterruptedException, MQClientException {
+    public void sendSyncMessage(String topic,String tag,Object msgBody) {
         Message sendMsg = new Message(topic, tag, JSON.toJSONBytes(msgBody));
-        SendResult sendResult = defaultMQProducer.send(sendMsg);
-        log.info("send message success,topic:{},tag:{},result：{}",topic,tag,JSON.toJSONString(sendMsg));
+        try {
+            defaultMQProducer.send(sendMsg);
+            log.info("send message success,topic:{},tag:{},result：{}",topic,tag,JSON.toJSONString(sendMsg));
+        } catch (Exception e) {
+            log.error("send message failed,topic:{},tag:{},exception：{}",topic,tag,ThrowableUtil.stackTraceToString(e));
+        }
     }
 
     /**
@@ -55,22 +54,23 @@ public class SendMessageUtil {
      * @param topic 消息主题
      * @param tag 消息标签
      * @param msgBody 消息体
-     * @throws RemotingException
-     * @throws InterruptedException
-     * @throws MQClientException
      */
-    public void sendASyncMessage(String topic, String tag, Object msgBody) throws RemotingException, InterruptedException, MQClientException {
+    public void sendASyncMessage(String topic, String tag, Object msgBody) {
         Message sendMsg = new Message(topic, tag, JSON.toJSONBytes(msgBody));
-        defaultMQProducer.send(sendMsg, new SendCallback() {
-            @Override
-            public void onSuccess(SendResult sendResult) {
-                log.info("send message success,topic:{},tag:{},result：{}",topic,tag,JSON.toJSONString(sendResult));
-            }
-            @Override
-            public void onException(Throwable e) {
-                log.info("send message success,topic:{},tag:{},result：{}",topic,tag, ThrowableUtil.stackTraceToString(e));
-            }
-        });
+        try {
+            defaultMQProducer.send(sendMsg, new SendCallback() {
+                @Override
+                public void onSuccess(SendResult sendResult) {
+                    log.info("send message success,topic:{},tag:{},result：{}",topic,tag,JSON.toJSONString(sendResult));
+                }
+                @Override
+                public void onException(Throwable e) {
+                    log.info("send message success,topic:{},tag:{},result：{}",topic,tag, ThrowableUtil.stackTraceToString(e));
+                }
+            });
+        } catch (Exception e) {
+            log.error("send message failed,topic:{},tag:{},exception：{}",topic,tag,ThrowableUtil.stackTraceToString(e));
+        }
     }
 
     /**
