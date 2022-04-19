@@ -11,11 +11,7 @@ import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
+import static com.example.rocketmqutil.utils.SendMessageUtil.UserPropKey.DELAY_TIME;
 
 /**
  * @author chenlingl
@@ -84,10 +80,22 @@ public class SendMessageUtil {
      * @throws InterruptedException
      * @throws MQClientException
      */
-    public void sendDelayMessage(String topic,String tag,long delayTime,Object msgBody) throws MQBrokerException, RemotingException, InterruptedException, MQClientException {
+    public void sendDelayMessage(String topic,String tag,long delayTime,Object msgBody) {
         Message sendMsg = new Message(topic, tag, JSON.toJSONBytes(msgBody));
-        long curTime = System.currentTimeMillis() + delayTime;
-        SendResult sendResult = defaultMQProducer.send(sendMsg);
-        log.info("send message success,topic:{},tag:{},result：{}",topic,tag,JSON.toJSONString(sendResult));
+        try {
+            delayTime += System.currentTimeMillis();
+            sendMsg.putUserProperty(DELAY_TIME, String.valueOf(delayTime));
+            SendResult sendResult = defaultMQProducer.send(sendMsg);
+            log.info("send message success,topic:{},tag:{},result：{}",topic,tag,JSON.toJSONString(sendResult));
+        } catch (Exception e) {
+            log.error("send message failed,topic:{},tag:{},exception：{}",topic,tag,ThrowableUtil.stackTraceToString(e));
+        }
+    }
+
+    static public class UserPropKey {
+        /**
+         * 该值来自阿里云的参数
+         */
+        public static final String DELAY_TIME = "__STARTDELIVERTIME";
     }
 }
