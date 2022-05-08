@@ -1,6 +1,10 @@
 package com.example.rocketmqutil.utils;
 
 import com.alibaba.fastjson.JSON;
+import io.netty.util.HashedWheelTimer;
+import io.netty.util.Timeout;
+import io.netty.util.Timer;
+import io.netty.util.TimerTask;
 import io.netty.util.internal.ThrowableUtil;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
@@ -11,6 +15,11 @@ import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import static com.example.rocketmqutil.utils.SendMessageUtil.UserPropKey.DELAY_TIME;
 
 /**
@@ -83,10 +92,13 @@ public class SendMessageUtil {
     public void sendDelayMessage(String topic,String tag,long delayTime,Object msgBody) {
         Message sendMsg = new Message(topic, tag, JSON.toJSONBytes(msgBody));
         try {
-            delayTime += System.currentTimeMillis();
-            sendMsg.putUserProperty(DELAY_TIME, String.valueOf(delayTime));
-            SendResult sendResult = defaultMQProducer.send(sendMsg);
-            log.info("send message success,topic:{},tag:{},result：{}",topic,tag,JSON.toJSONString(sendResult));
+            log.info("======receive message time ：{}=======",System.currentTimeMillis());
+            Timer timer = new HashedWheelTimer(Executors.defaultThreadFactory());
+            timer.newTimeout(timeout -> {
+                SendResult sendResult = defaultMQProducer.send(sendMsg);
+                log.info("=======send message time :{}=======",System.currentTimeMillis());
+                log.info("send message success,topic:{},tag:{},result：{}",topic,tag,JSON.toJSONString(sendResult));
+            },delayTime, TimeUnit.SECONDS);
         } catch (Exception e) {
             log.error("send message failed,topic:{},tag:{},exception：{}",topic,tag,ThrowableUtil.stackTraceToString(e));
         }
