@@ -20,7 +20,7 @@ public abstract class AbstractRocketMqConsumerConfig {
      * @return
      */
     public int getReConsumeTimes(AnnotatedElement annotationEle){
-        RocketMqConsumerListener rocketMqListener = (RocketMqConsumerListener) AnnotationUtil.getAnnotation(annotationEle, RocketMqConsumerListener.class);
+        RocketMqConsumerListener rocketMqListener = AnnotationUtil.getAnnotation(annotationEle, RocketMqConsumerListener.class);
         if (rocketMqListener.reConsumeTimes() != -1) {
             return rocketMqListener.reConsumeTimes();
         }

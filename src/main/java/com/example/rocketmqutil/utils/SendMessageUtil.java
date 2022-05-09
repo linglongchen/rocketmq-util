@@ -16,11 +16,8 @@ import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
-import static com.example.rocketmqutil.utils.SendMessageUtil.UserPropKey.DELAY_TIME;
 
 /**
  * @author chenlingl
@@ -33,6 +30,11 @@ public class SendMessageUtil {
 
 
     private final DefaultMQProducer defaultMQProducer;
+
+    /**
+     * 时间论算法实现延迟消息
+     */
+    private final Timer timer = new HashedWheelTimer(Executors.defaultThreadFactory());
 
     public SendMessageUtil(DefaultMQProducer producer) {
         this.defaultMQProducer = producer;
@@ -48,7 +50,7 @@ public class SendMessageUtil {
         Message sendMsg = new Message(topic, tag, JSON.toJSONBytes(msgBody));
         try {
             defaultMQProducer.send(sendMsg);
-            log.info("send message success,topic:{},tag:{},result：{}",topic,tag,JSON.toJSONString(sendMsg));
+            log.info("send message success,topic:{},tag:{},msgBody：{}",topic,tag,JSON.toJSONString(msgBody));
         } catch (Exception e) {
             log.error("send message failed,topic:{},tag:{},exception：{}",topic,tag,ThrowableUtil.stackTraceToString(e));
         }
@@ -66,11 +68,11 @@ public class SendMessageUtil {
             defaultMQProducer.send(sendMsg, new SendCallback() {
                 @Override
                 public void onSuccess(SendResult sendResult) {
-                    log.info("send message success,topic:{},tag:{},result：{}",topic,tag,JSON.toJSONString(sendResult));
+                    log.info("send message success,topic:{},tag:{},msgBody：{}",topic,tag,JSON.toJSONString(msgBody));
                 }
                 @Override
                 public void onException(Throwable e) {
-                    log.info("send message success,topic:{},tag:{},result：{}",topic,tag, ThrowableUtil.stackTraceToString(e));
+                    log.info("send message success,topic:{},tag:{},exception：{}",topic,tag, ThrowableUtil.stackTraceToString(e));
                 }
             });
         } catch (Exception e) {
@@ -93,21 +95,13 @@ public class SendMessageUtil {
         Message sendMsg = new Message(topic, tag, JSON.toJSONBytes(msgBody));
         try {
             log.info("======receive message time ：{}=======",System.currentTimeMillis());
-            Timer timer = new HashedWheelTimer(Executors.defaultThreadFactory());
             timer.newTimeout(timeout -> {
                 SendResult sendResult = defaultMQProducer.send(sendMsg);
-                log.info("=======send message time :{}=======",System.currentTimeMillis());
-                log.info("send message success,topic:{},tag:{},result：{}",topic,tag,JSON.toJSONString(sendResult));
+                log.info("send message success,topic:{},tag:{},msgBody：{}",topic,tag,JSON.toJSONString(msgBody));
             },delayTime, TimeUnit.SECONDS);
         } catch (Exception e) {
             log.error("send message failed,topic:{},tag:{},exception：{}",topic,tag,ThrowableUtil.stackTraceToString(e));
         }
     }
 
-    static public class UserPropKey {
-        /**
-         * 该值来自阿里云的参数
-         */
-        public static final String DELAY_TIME = "__STARTDELIVERTIME";
-    }
 }

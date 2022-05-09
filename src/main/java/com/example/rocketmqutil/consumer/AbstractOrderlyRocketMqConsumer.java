@@ -42,7 +42,7 @@ public class AbstractOrderlyRocketMqConsumer<T> extends AbstractRocketMqConsumer
             String topic = msg.getTopic();
             String tag = msg.getTags();
             int reConsumeTimes = msg.getReconsumeTimes();
-            log.info("msg Topic：[{}],msg Tag：[{}],reConsumeTimes：[{}]，msg body：[{}]，reSend before msgID:{},reSend after msgId :{}", topic, tag,reConsumeTimes, msgBody,msgId, msgId);
+            log.info("consumer message,msg Topic：[{}],msg Tag：[{}],current reConsumeTimes：[{}]，msg body：[{}]，msgID:{}", topic, tag,reConsumeTimes, msgBody,msgId);
             Type type = TypeUtil.getTypeArgument(this.getClass());
             Class<?> clazz = TypeUtil.getClass(type);
             Object msgObj = JSON.parseObject(msgBody, clazz);
